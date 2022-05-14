@@ -5,7 +5,7 @@ const player_movement_speed := 120
 const gravity := 900
 const jump_force := -300
 var attack_animation_finished = false
-onready var label = get_child(get_children().size() - 1)
+# onready var label = get_child(get_children().size() - 1)
 
 
 # machine state =====================
@@ -23,7 +23,7 @@ onready var _current_state = "IDLE"
 
 func _physics_process(delta):
   _states[_current_state].call_func(delta)
-  label.text = _current_state
+  $Label.text = _current_state
   _move_and_slide()
 
 
