@@ -166,6 +166,14 @@ __meta__ = {
 [node name="Camera2D" type="Camera2D" parent="player"]
 current = true
 
+[node name="Label" type="Label" parent="player"]
+margin_left = -20.0
+margin_top = -28.0
+margin_right = 20.0
+margin_bottom = -14.0
+text = "teste"
+align = 1
+
 [node name="platform" type="StaticBody2D" parent="."]
 position = Vector2( -1.58712, 33.3296 )
 __meta__ = {

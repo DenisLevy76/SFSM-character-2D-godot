@@ -5,6 +5,7 @@ const player_movement_speed := 120
 const gravity := 900
 const jump_force := -300
 var attack_animation_finished = false
+onready var label = get_child(get_children().size() - 1)
 
 
 # machine state =====================
@@ -18,10 +19,11 @@ onready var _states = {
   'SLIDING': funcref(self, 'slide_state')
 }
 
-onready var _current_state = _states["IDLE"]
+onready var _current_state = "IDLE"
 
 func _physics_process(delta):
-  _current_state.call_func(delta)
+  _states[_current_state].call_func(delta)
+  label.text = _current_state
   _move_and_slide()
 
 
@@ -74,44 +76,44 @@ func slide_state(delta):
 # check functions
 func idle_state_check():
   if Input.is_action_pressed("ui_left") or Input.is_action_pressed("ui_right"):
-	  _current_state = _states["WALKING"]
+	  _current_state = "WALKING"
   elif Input.is_action_just_pressed("attack"):
-	  _current_state = _states["ATTACKING"]
+	  _current_state = "ATTACKING"
   elif Input.is_action_just_pressed("space"):
-	  _current_state = _states["JUMPING"]
+	  _current_state = "JUMPING"
   elif not is_on_floor():
-	  _current_state = _states["FALLING"]
+	  _current_state = "FALLING"
   elif Input.is_action_pressed("reload"):
-	  _current_state = _states["SLIDING"]
+	  _current_state = "SLIDING"
 	
 func fall_state_check():
   if is_on_floor():
-	  _current_state = _states["IDLE"]
+	  _current_state = "IDLE"
   elif Input.is_action_pressed("attack"):
-	  _current_state = _states["ATTACKING"]
+	  _current_state = "ATTACKING"
 
 func jump_state_check():
   if Input.is_action_pressed("attack"):
-	  _current_state = _states["ATTACKING"]
+	  _current_state = "ATTACKING"
   elif velocity.y >= 0:
-	  _current_state = _states["FALLING"]
+	  _current_state = "FALLING"
 func _move_state_check():
   if Input.is_action_just_pressed("attack"):
-	  _current_state = _states["ATTACKING"]
+	  _current_state = "ATTACKING"
   elif Input.is_action_just_pressed("space"):
-	  _current_state = _states["JUMPING"]
+	  _current_state = "JUMPING"
   elif not is_on_floor():
-	  _current_state = _states["FALLING"]
+	  _current_state = "FALLING"
   elif velocity.x == 0:
-	  _current_state = _states["IDLE"]
+	  _current_state = "IDLE"
 
 func attack_state_check():
   if Input.is_action_just_pressed("space"):
-	  _current_state = _states["JUMPING"]
+	  _current_state = "JUMPING"
   elif not is_on_floor():
-	  _current_state = _states["FALLING"]
+	  _current_state = "FALLING"
   else:
-	  _current_state = _states["IDLE"]
+	  _current_state = "IDLE"
 
 # utils ==============================
 func _apply_gravity(delta):
