@@ -16,7 +16,7 @@ onready var _states = {
   'JUMPING': funcref(self, 'jump_state'), 
   'ATTACKING' : funcref(self, '_attack_state'),
   'FALLING': funcref(self, 'fall_state'),
-  'SLIDING': funcref(self, 'slide_state')
+  'SLIDING': funcref(self, 'slide_state'),
 }
 
 onready var _current_state = "IDLE"
@@ -65,11 +65,9 @@ func idle_state(delta):
 
 func slide_state(delta):
   $AnimatedSprite.play("slide")
-  if is_on_floor() :
-	  velocity.x = jump_force
+  velocity.x = lerp(velocity.x, 0, 0.05)
   
   _move()
-  
   _apply_gravity(delta)
 
 
@@ -83,8 +81,7 @@ func idle_state_check():
 	  _current_state = "JUMPING"
   elif not is_on_floor():
 	  _current_state = "FALLING"
-  elif Input.is_action_pressed("reload"):
-	  _current_state = "SLIDING"
+
 	
 func fall_state_check():
   if is_on_floor():
@@ -106,11 +103,19 @@ func _move_state_check():
 	  _current_state = "FALLING"
   elif velocity.x == 0:
 	  _current_state = "IDLE"
+  elif Input.is_action_pressed("slide"):
+	  _current_state = "SLIDING"
 
 func attack_state_check():
   if Input.is_action_just_pressed("space"):
 	  _current_state = "JUMPING"
   elif not is_on_floor():
+	  _current_state = "FALLING"
+  else:
+	  _current_state = "IDLE"
+
+func slide_state_check():
+  if not is_on_floor():
 	  _current_state = "FALLING"
   else:
 	  _current_state = "IDLE"
@@ -139,6 +144,7 @@ func _jump():
 func _on_AnimatedSprite_animation_finished():
 	if $AnimatedSprite.animation == 'attack': 
 		attack_state_check()
-
+	elif $AnimatedSprite.animation == 'slide':
+		slide_state_check()
 	
   
