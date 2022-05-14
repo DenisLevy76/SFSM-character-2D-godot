@@ -4,6 +4,7 @@ var velocity := Vector2()
 const player_movement_speed := 120
 const gravity := 900
 const jump_force := -300
+var attack_animation_finished = false
 
 
 # machine state =====================
@@ -13,7 +14,8 @@ onready var _states = {
   "WALKING": funcref(self, '_move_state'), 
   'JUMPING': funcref(self, 'jump_state'), 
   'ATTACKING' : funcref(self, '_attack_state'),
-  'FALLING': funcref(self, 'fall_state')
+  'FALLING': funcref(self, 'fall_state'),
+  'SLIDING': funcref(self, 'slide_state')
 }
 
 onready var _current_state = _states["IDLE"]
@@ -26,7 +28,9 @@ func _physics_process(delta):
 # states ============================
 func _attack_state(delta):
   $AnimatedSprite.play("attack")
-  
+  attack_animation_finished = false
+
+  _jump()
   _apply_gravity(delta)
 
 func _move_state(delta):
@@ -39,9 +43,7 @@ func _move_state(delta):
 func jump_state(delta):
   $AnimatedSprite.play("jump")
 
-  if is_on_floor():
-	  velocity.y = jump_force
-
+  _jump()
   _apply_gravity(delta)
   _move()
   jump_state_check()
@@ -59,6 +61,15 @@ func idle_state(delta):
   velocity.x = 0
   idle_state_check()
 
+func slide_state(delta):
+  $AnimatedSprite.play("slide")
+  if is_on_floor() :
+	  velocity.x = jump_force
+  
+  _move()
+  
+  _apply_gravity(delta)
+
 
 # check functions
 func idle_state_check():
@@ -70,6 +81,8 @@ func idle_state_check():
 	  _current_state = _states["JUMPING"]
   elif not is_on_floor():
 	  _current_state = _states["FALLING"]
+  elif Input.is_action_pressed("reload"):
+	  _current_state = _states["SLIDING"]
 	
 func fall_state_check():
   if is_on_floor():
@@ -97,7 +110,7 @@ func attack_state_check():
 	  _current_state = _states["JUMPING"]
   elif not is_on_floor():
 	  _current_state = _states["FALLING"]
-  elif velocity.x == 0:
+  else:
 	  _current_state = _states["IDLE"]
 
 # utils ==============================
@@ -117,7 +130,13 @@ func _move():
   else:
 	  velocity.x = 0
 
+func _jump():
+	if Input.is_action_pressed("space") and is_on_floor():
+	  velocity.y = jump_force
 
 func _on_AnimatedSprite_animation_finished():
-	if $AnimatedSprite.animation == 'attack': _current_state = _states["IDLE"]
+	if $AnimatedSprite.animation == 'attack': 
+		attack_state_check()
+
+	
   
