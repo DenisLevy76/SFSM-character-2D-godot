@@ -80,5 +80,4 @@ slide={
 
 [rendering]
 
-environment/default_clear_color=Color( 0.12549, 0.054902, 0.192157, 1 )
 environment/default_environment="res://default_env.tres"
