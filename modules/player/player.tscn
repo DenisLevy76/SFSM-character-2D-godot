@@ -1,14 +1,47 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://modules/player/adventurer-Sheet.png" type="Texture" id=1]
 [ext_resource path="res://modules/player/player.gd" type="Script" id=2]
-[ext_resource path="res://modules/player/States/Attacking.gd" type="Script" id=3]
-[ext_resource path="res://modules/player/States/Running.gd" type="Script" id=4]
-[ext_resource path="res://modules/state_machine/state_machine.gd" type="Script" id=5]
-[ext_resource path="res://modules/player/States/Idle.gd" type="Script" id=6]
+[ext_resource path="res://modules/state_machine/StateMachine.tscn" type="PackedScene" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 5.5, 14.4451 )
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 1 )
+region = Rect2( 150, 111, 50, 37 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 1 )
+region = Rect2( 200, 111, 50, 37 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 1 )
+region = Rect2( 250, 111, 50, 37 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 1 )
+region = Rect2( 300, 111, 50, 37 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 1 )
+region = Rect2( 0, 148, 50, 37 )
+
+[sub_resource type="AtlasTexture" id=7]
+atlas = ExtResource( 1 )
+region = Rect2( 0, 0, 50, 37 )
+
+[sub_resource type="AtlasTexture" id=8]
+atlas = ExtResource( 1 )
+region = Rect2( 50, 0, 50, 37 )
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 1 )
+region = Rect2( 100, 0, 50, 37 )
+
+[sub_resource type="AtlasTexture" id=10]
+atlas = ExtResource( 1 )
+region = Rect2( 150, 0, 50, 37 )
 
 [sub_resource type="AtlasTexture" id=14]
 atlas = ExtResource( 1 )
@@ -50,42 +83,6 @@ region = Rect2( 50, 111, 50, 37 )
 atlas = ExtResource( 1 )
 region = Rect2( 100, 111, 50, 37 )
 
-[sub_resource type="AtlasTexture" id=2]
-atlas = ExtResource( 1 )
-region = Rect2( 150, 111, 50, 37 )
-
-[sub_resource type="AtlasTexture" id=3]
-atlas = ExtResource( 1 )
-region = Rect2( 200, 111, 50, 37 )
-
-[sub_resource type="AtlasTexture" id=4]
-atlas = ExtResource( 1 )
-region = Rect2( 250, 111, 50, 37 )
-
-[sub_resource type="AtlasTexture" id=5]
-atlas = ExtResource( 1 )
-region = Rect2( 300, 111, 50, 37 )
-
-[sub_resource type="AtlasTexture" id=6]
-atlas = ExtResource( 1 )
-region = Rect2( 0, 148, 50, 37 )
-
-[sub_resource type="AtlasTexture" id=7]
-atlas = ExtResource( 1 )
-region = Rect2( 0, 0, 50, 37 )
-
-[sub_resource type="AtlasTexture" id=8]
-atlas = ExtResource( 1 )
-region = Rect2( 50, 0, 50, 37 )
-
-[sub_resource type="AtlasTexture" id=9]
-atlas = ExtResource( 1 )
-region = Rect2( 100, 0, 50, 37 )
-
-[sub_resource type="AtlasTexture" id=10]
-atlas = ExtResource( 1 )
-region = Rect2( 150, 0, 50, 37 )
-
 [sub_resource type="AtlasTexture" id=11]
 atlas = ExtResource( 1 )
 region = Rect2( 0, 222, 50, 37 )
@@ -100,6 +97,16 @@ region = Rect2( 100, 222, 50, 37 )
 
 [sub_resource type="SpriteFrames" id=24]
 animations = [ {
+"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
+"loop": false,
+"name": "slide",
+"speed": 10.0
+}, {
+"frames": [ SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+}, {
 "frames": [ SubResource( 14 ), SubResource( 15 ) ],
 "loop": true,
 "name": "jump",
@@ -113,16 +120,6 @@ animations = [ {
 "frames": [ SubResource( 16 ), SubResource( 17 ) ],
 "loop": true,
 "name": "fall",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
-"loop": false,
-"name": "slide",
-"speed": 10.0
-}, {
-"frames": [ SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ) ],
-"loop": true,
-"name": "idle",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 11 ), SubResource( 12 ), SubResource( 13 ) ],
@@ -162,17 +159,8 @@ margin_bottom = -14.0
 text = "teste"
 align = 1
 
-[node name="StateMachine" type="Node" parent="."]
-script = ExtResource( 5 )
-initial_state = "Idle"
-
-[node name="Idle" type="Node" parent="StateMachine"]
-script = ExtResource( 6 )
-
-[node name="Running" type="Node" parent="StateMachine"]
-script = ExtResource( 4 )
-
-[node name="Attacking" type="Node" parent="StateMachine"]
-script = ExtResource( 3 )
+[node name="StateMachine" parent="." instance=ExtResource( 3 )]
 
 [connection signal="animation_finished" from="AnimatedSprite" to="StateMachine/Attacking" method="_on_AnimatedSprite_animation_finished"]
+
+[editable path="StateMachine"]

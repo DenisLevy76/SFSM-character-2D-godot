@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://modules/player/States/Idle.gd" type="Script" id=1]
+[ext_resource path="res://modules/state_machine/state_machine.gd" type="Script" id=2]
+[ext_resource path="res://modules/player/States/Attacking.gd" type="Script" id=3]
+[ext_resource path="res://modules/player/States/Running.gd" type="Script" id=4]
+
+[node name="StateMachine" type="Node"]
+script = ExtResource( 2 )
+initial_state = "Idle"
+
+[node name="Idle" type="Node" parent="."]
+script = ExtResource( 1 )
+
+[node name="Running" type="Node" parent="."]
+script = ExtResource( 4 )
+
+[node name="Attacking" type="Node" parent="."]
+script = ExtResource( 3 )
