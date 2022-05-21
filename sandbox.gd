@@ -11,9 +11,6 @@ func _ready():
 	pass # Replace with function body.
 
 
-func _input(event):
+func _input(_event):
 	if Input.is_action_just_pressed("reload"):
-		get_tree().reload_current_scene()
-
-
-
+		return get_tree().reload_current_scene()
